@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import AdScreen from '../screens/AdScreen';
+import InfoScreen from '../screens/InfoScreen';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 const LoginStack = createStackNavigator({
@@ -63,8 +64,27 @@ SettingsStack.navigationOptions = {
   ),
 };
 
+const InfoStack = createStackNavigator({
+  Info: InfoScreen,
+});
+
+InfoStack.navigationOptions = {
+  header: null,
+  tabBarLabel: 'Info',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
+    />
+  ),
+};
+
+
 export default createBottomTabNavigator({
   AdStack,
   HomeStack,
-  SettingsStack,
+  InfoStack,
+
+ 
+  
 });

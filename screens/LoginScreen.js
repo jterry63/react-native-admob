@@ -61,7 +61,7 @@ onButtonPress() {
 
 onLoginFail() {
     this.setState({
-        error: 'Authentication Failed',
+        error: '',
         loading: false
     })
 }
@@ -134,15 +134,15 @@ render() {
 
         </Card>
         <CardSection>
-            <TouchableOpacity style={{ marginLeft: 125, marginTop: 10}}><Text style={{color: 'white', fontWeight: 'bold'}}>{this.state.forgotPassword}</Text></TouchableOpacity>
+            <TouchableOpacity style={{alignItems: "center", justifyContent: 'center', width: '100%'}}><Text style={{color: 'white', fontWeight: 'bold'}}>{this.state.forgotPassword}</Text></TouchableOpacity>
         </CardSection>
 
         <CardSection>
-            <Text style={{color: 'white', marginTop: 100, marginLeft: 100}}>{this.state.haveAccount}</Text>
+        <TouchableOpacity disabled={true} style={{alignItems: "center", justifyContent: 'center', width: '100%', marginTop: '25%'}}><Text style={{color: 'white'}}>{this.state.haveAccount}</Text></TouchableOpacity>
         </CardSection>
 
         <CardSection>
-        <TouchableOpacity onPress={this.onSignUpClick.bind(this)} style={{ marginLeft: 155, marginTop: 10}}><Text style={{color: 'white', fontWeight: 'bold'}}>{this.state.signUp}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this.onSignUpClick.bind(this)} style={{ alignItems: "center", justifyContent: 'center', width: '100%', marginTop: '10%'}}><Text style={{color: 'white', fontWeight: 'bold'}}>{this.state.signUp}</Text></TouchableOpacity>
 
         </CardSection>
         </ImageBackground>
@@ -155,7 +155,7 @@ const styles = {
 errorTextStyle: {
     fontSize: 20,
     alignSelf: 'center',
-    color: 'red'
+    color: 'white'
 
 }
 }

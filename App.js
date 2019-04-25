@@ -44,6 +44,7 @@ export default class App extends React.Component {
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
         'adlery': require('./assets/fonts/Adlery-Pro-trial.ttf'),
+        'crash': require('./assets/fonts/Crasns.ttf'),
       }),
     ]);
   };
