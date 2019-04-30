@@ -1,30 +1,18 @@
 import React from 'react';
 import {
   Image,
-  Platform,
-  ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   Button,
-  ImageBackground,
   Modal,
   Alert,
   TouchableHighlight
 } from 'react-native';
+
 import firebase from 'firebase';
-import { CardSection, Card } from '../components/common';
-
-
-
-
 
 export default class HomeScreen extends React.Component {
-
-  state = {
-    modalVisible: true,
-  };
 
   static navigationOptions = {
     title: 'charity ads',
@@ -38,6 +26,10 @@ export default class HomeScreen extends React.Component {
   
   };
 
+  state = {
+    modalVisible: false,
+  };
+
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
@@ -49,82 +41,86 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
 
-     
-   
       <View style={styles.container}>
 
       <View style={styles.firstrow}>
-       
+        <TouchableHighlight onPress={() => {this.setModalVisible(true);}}>
           <Image  source={{uri: 'https://i.imgur.com/Hb9YNoP.jpg'}}
-          style={{width: 115, height: 115, borderRadius: 55}} />
-       
+                  style={{width: 115, height: 115, borderRadius: 55}} />
+        </TouchableHighlight>
       </View>
 
       <View style={styles.secondrow}>
         <Text style={styles.textColor}>
-          $ Earned Today: 
+          Views Today: 
+        </Text>
+        <Text style={styles.views}>
+          3
         </Text>
       </View>
 
       <View style={styles.thirdrow}>
         <Text style={styles.textColor}>
-          $ Earned All Time: 
+          Total Views: 
+        </Text>
+        <Text style={styles.views}>
+          17
         </Text>
       </View>
 
       <View style={styles.fourthrow}></View>
 
-
-
-
-
-
       <View style={{marginTop: 22}}>
-        <Modal 
+        <Modal
           animationType="slide"
           transparent={false}
-          presentationStyle="fullScreen"
           visible={this.state.modalVisible}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
-          <View style={styles.modalContainer}>
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Text style={styles.modalText}>Welcome to Charity Ads!</Text>
-              <View style={styles.instructions}>
 
-              <Text style={{fontSize: 30, color: '#23accd'}}>1.  do this</Text>
-              <Text style={{fontSize: 30, color: '#23accd'}}>2.  then do this</Text>
-              <Text style={{fontSize: 30, color: '#23accd'}}>3.  now do this</Text>
+<View style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.headerContent}>
+                <Image style={styles.avatar}
+                  source={{uri: 'https://i.imgur.com/Hb9YNoP.jpg'}}/>
+
+                <Text style={styles.name}>Bryson Lay </Text>
+                <Text style={styles.userInfo}>b.lay12@gmail.com </Text>
+                
+            </View>
+          </View>
+
+          <View style={styles.body}>
+
+            <View style={styles.item}>
+                <Text style={styles.info}>Settings</Text>
+            </View>
+
+            <TouchableHighlight onPress={() => {this.logOut()}}>
+              <View style={styles.item}>
+                <Text style={styles.info}>Sign Out</Text>
               </View>
-
-              <TouchableHighlight
-              style={styles.hideModal}
-                onPress={() => {
+              </TouchableHighlight>
+            
+              <TouchableHighlight style={styles.bottom} onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
-                <Text style={styles.getStartedBtn}>Get Started!</Text>
+                <View>
+                  <Text style={styles.info}>Close</Text>
+                </View>
               </TouchableHighlight>
-            </View>
-      
+
           </View>
+      </View>
         </Modal>
 
-        <TouchableHighlight
-          onPress={() => {
-            this.setModalVisible(true);
-          }}>
+        <TouchableHighlight>
           <Text style={{display: 'none'}}>Show Modal</Text>
         </TouchableHighlight>
       </View>
-      <View>
-      <Button title='logout' onPress={() => this.logOut()} />
-    </View>
+
       </View>
-
-      
-
-    
     );
   }
 }
@@ -137,7 +133,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
     
   },
-
   firstrow: {
     flex: 1,
     backgroundColor: "white",
@@ -145,8 +140,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-
   secondrow: {
+    justifyContent: 'center',
     flex: 1,
     backgroundColor: "rgba(0,128,128,.3)",
     marginTop: 20,
@@ -161,8 +156,8 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOpacity: 1.0
   },
-
   thirdrow: {
+    justifyContent: 'center',
     flex: 1,
     backgroundColor: "rgba(0,128,128,.3)",
     marginTop: 20,
@@ -189,6 +184,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center'
   },
+  views: {
+    color: 'white',
+    fontSize: 40,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 10
+   
+  },
   modalContainer: {
     backgroundColor: 'whitesmoke',
     height: '100%',
@@ -201,9 +204,7 @@ modalText:{
     marginTop: '25%',
     textAlign: 'center',
     fontSize: 75,
-    fontFamily: 'adlery'
-  
-   
+    fontFamily: 'adlery' 
 },
 hideModal: {
     marginTop: 50,
@@ -214,14 +215,71 @@ getStartedBtn: {
     marginTop: '25%',
     fontWeight: 'bold',
     fontSize: 20,
-    textDecorationLine: 'underline'
- 
-    
+    textDecorationLine: 'underline'  
 },
 instructions: {
     marginTop: '25%'
-}
+},
+header:{
+  backgroundColor: "white",
+},
+headerContent:{
+  padding:30,
+  alignItems: 'center',
+},
+avatar: {
+  width: 130,
+  height: 130,
+  borderRadius: 63,
+  borderWidth: 4,
+  borderColor: "white",
+  marginBottom:10,
+},
+name:{
+  fontSize:22,
+  color:"#000000",
+  fontWeight:'600',
+},
+userInfo:{
+  fontSize:16,
+  color:"#778899",
+  fontWeight:'600',
+  marginTop: 5
+},
+body:{
+  backgroundColor: "white",
+  height:500,
+  alignItems:'center'
   
+},
+item:{
+  flexDirection : 'row',
+},
+infoContent:{
+  flex:1,
+  alignItems:'flex-start',
+  paddingLeft:5
+},
+iconContent:{
+  flex:1,
+  alignItems:'flex-end',
+  paddingRight:5,
+},
+icon:{
+  width:20,
+  height:20,
+  marginTop:20,
+},
+info:{
+  fontSize:18,
+  marginTop:17,
+  color: "black",
+},
+bottom: {
+  flex: 1,
+  justifyContent: 'flex-end',
+  marginBottom: 10
+}
 });
 
 

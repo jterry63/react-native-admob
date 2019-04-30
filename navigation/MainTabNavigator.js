@@ -7,6 +7,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import AdScreen from '../screens/AdScreen';
 import InfoScreen from '../screens/InfoScreen';
+import NewUserScreen from '../screens/NewUserScreen'
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 const LoginStack = createStackNavigator({
@@ -14,6 +15,14 @@ const LoginStack = createStackNavigator({
 });
 
 LoginStack.navigationOptions = {
+  tabBarVisible: false
+};
+
+const NewUserStack = createStackNavigator({
+  NewUser: NewUserScreen
+});
+
+NewUserStack.navigationOptions = {
   tabBarVisible: false
 };
 
