@@ -11,6 +11,7 @@ import {
 
 import firebase from 'firebase';
 
+
 export default class HomeScreen extends React.Component {
 
   static navigationOptions = {
@@ -27,7 +28,24 @@ export default class HomeScreen extends React.Component {
 
   state = {
     modalVisible: false,
+    userName: '',
+    userEmail: ''
   };
+
+  componentDidMount() {
+    let user = firebase.auth().currentUser;
+    let name = user.displayName;
+    let email = user.email;
+    this.setUserData(name, email);
+
+  }
+
+  setUserData(name, email) {
+    this.setState({
+      userName: name,
+      userEmail: email
+  })
+  }
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
@@ -37,16 +55,26 @@ export default class HomeScreen extends React.Component {
     firebase.auth().signOut();
   }
 
+   storeHighScore(score) {
+    var user = firebase.auth().currentUser;
+    var uid= user.uid;
+    firebase.database().ref('users/' + uid).set({
+      highscore: score
+    });
+  }
+
   render() {
     return (
 
       <View style={styles.container}>
 
       <View style={styles.firstrow}>
-        <TouchableHighlight onPress={() => {this.setModalVisible(true);}}>
-          <Image  source={{uri: 'https://i.imgur.com/Hb9YNoP.jpg'}}
+        <TouchableHighlight onPress={() => {this.setModalVisible(true); this.storeHighScore(31);}}>
+          <Image  source={{uri: 'https://i.imgur.com/WMy7Wid.png'}}
                   style={{width: 115, height: 115, borderRadius: 55}} />
+                  
         </TouchableHighlight>
+        <Text style={{marginTop: 10, fontSize: 15}}>{this.state.userName}</Text>
       </View>
 
       <View style={styles.secondrow}>
@@ -82,10 +110,10 @@ export default class HomeScreen extends React.Component {
           <View style={styles.header}>
             <View style={styles.headerContent}>
                 <Image style={styles.avatar}
-                  source={{uri: 'https://i.imgur.com/Hb9YNoP.jpg'}}/>
+                  source={{uri: 'https://i.imgur.com/WMy7Wid.png'}}/>
 
-                <Text style={styles.name}>Bryson Lay </Text>
-                <Text style={styles.userInfo}>b.lay12@gmail.com </Text>
+                <Text style={styles.name}>{this.state.userName}</Text>
+                <Text style={styles.userInfo}>{this.state.userEmail}</Text>
                 
             </View>
           </View>

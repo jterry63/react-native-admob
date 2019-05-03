@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, Card, CardSection, Input, Spinner } from '../components/common';
 import firebase from 'firebase';
-import { Text, ImageBackground, TouchableOpacity } from 'react-native';
+import { Text, ImageBackground, TouchableOpacity, View } from 'react-native';
+
 
 
 
@@ -20,7 +21,11 @@ export default class LoginScreen extends React.Component {
     forgotPassword: 'Forgot Password?', 
     haveAccount: "Don't have an account yet?",
     signUp: 'Sign Up',
-    loggedIn: null
+    showSignUp: 'none',
+    loggedIn: null,
+    name: '',
+    newUser: false
+    
  };
 
  
@@ -35,14 +40,17 @@ export default class LoginScreen extends React.Component {
       });
 
       firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
+        if (user && !this.state.newUser) {
           this.setState({ loggedIn: true });
-          this.props.navigation.navigate('NewUser');
+          console.log(user)
+          this.props.navigation.navigate('Home');
         } else {
           this.setState({ loggedIn: false });
         }
       });
     }
+
+    
 
 
 onButtonPress() {
@@ -55,6 +63,9 @@ onButtonPress() {
         .catch(() => {
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then(this.onLoginSuccess.bind(this))
+                .then(this.updateProfile.bind(this))
+                .then(this.setState({newUser: true}))
+                .then(this.props.navigation.navigate('NewUser'))
                 .catch(this.onLoginFail.bind(this)) 
         });
 }
@@ -80,9 +91,22 @@ onSignUpClick() {
         loginBtn: 'Sign Up',
         forgotPassword: '',
         haveAccount: '',
-        signUp: ''
+        signUp: '',
+        showSignUp: 'block'
     })
 }
+
+updateProfile() {
+    var user = firebase.auth().currentUser;
+    user.updateProfile({
+      displayName: this.state.name,
+      photoURL: "https://example.com/jane-q-user/profile.jpg"
+    }).then(function() {
+      console.log(user);
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
 
 renderButton() {
     if (this.state.loading) {
@@ -99,6 +123,19 @@ render() {
     return (
         <ImageBackground source={{ uri: 'https://i.imgur.com/HH3twbC.png'}} style={{width: '100%', height: '100%'}}>
         <Card>
+<View style={{display: this.state.showSignUp}}>
+            <CardSection>
+            <Text style={{ fontSize: 20, color: 'rgba(255,255,255, 0.6)', marginRight: 10, marginTop: 10}}></Text>
+                <Input 
+                    
+                    label="name"
+                    placeholder="Name"
+                    value={this.state.name}
+                    onChangeText={name => this.setState({ name })}
+                />
+            </CardSection>
+
+</View>
        
             <CardSection>
             <Text style={{ fontSize: 20, color: 'rgba(255,255,255, 0.6)', marginRight: 10, marginTop: 10}}></Text>
@@ -122,6 +159,8 @@ render() {
                     onChangeText={password => this.setState({ password })}
                 />
             </CardSection>
+
+            
             
             <Text style={styles.errorTextStyle}>
            
