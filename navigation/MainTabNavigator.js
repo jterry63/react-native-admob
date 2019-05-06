@@ -6,7 +6,6 @@ import {
 } from "react-navigation";
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 import LoginScreen from "../screens/LoginScreen";
 import AdScreen from "../screens/AdScreen";
 import InfoScreen from "../screens/InfoScreen";
@@ -66,19 +65,19 @@ AdStack.navigationOptions = {
   )
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen
-});
+// const SettingsStack = createStackNavigator({
+//   Settings: SettingsScreen
+// });
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: "Account",
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === "ios" ? "ios-contact" : "md-contact"}
-    />
-  )
-};
+// SettingsStack.navigationOptions = {
+//   tabBarLabel: "Account",
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === "ios" ? "ios-contact" : "md-contact"}
+//     />
+//   )
+// };
 
 const InfoStack = createStackNavigator({
   Info: InfoScreen

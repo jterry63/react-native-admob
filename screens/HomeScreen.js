@@ -55,8 +55,8 @@ export default class HomeScreen extends React.Component {
 
   
 
-    // this.props.navigation.navigate("Login")
-    this.props.navigation.goBack()
+    this.props.navigation.navigate("Login")
+    // this.props.navigation.goBack()
 
   };
 
