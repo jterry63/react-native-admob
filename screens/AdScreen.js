@@ -1,40 +1,122 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { AdMobBanner, AdMobInterstitial, AdMobRewarded } from "expo";
+import firebase from 'firebase';
 
-import { AdMobBanner, AdMobRewarded } from "expo";
-import { WebBrowser } from "expo";
 
-const REWARDED_ID = "ca-app-pub-3940256099942544/1712485313";
-
-AdMobRewarded.setAdUnitID(REWARDED_ID);
-AdMobRewarded.setTestDeviceID("EMULATOR");
-
-export default class AdScreen extends React.Component {
-  static navigationOptions = {
-    title: "Ads"
-  };
 
   _openRewarded = async () => {
     await AdMobRewarded.requestAdAsync();
     await AdMobRewarded.showAdAsync();
   };
 
-  componentDidMount() {
-    this._openRewarded();
+  state = {
+    counter: 1
   }
 
+
+
+
+export default class AdScreen extends React.Component {
+componentDidMount() {
+
+
+
+
+
+
+    AdMobRewarded.setTestDeviceID("EMULATOR");
+    // ALWAYS USE TEST ID for Admob ads
+    AdMobRewarded.setAdUnitID("ca-app-pub-3940256099942544/1712485313");
+  
+    AdMobRewarded.addEventListener("rewardedVideoDidLoad", () =>
+      console.log("Loaded")
+    );
+    AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () =>
+      console.log("Failed to load")
+    );
+    AdMobRewarded.addEventListener("rewardedVideoDidOpen", () =>
+      console.log("Opened")
+    );
+    AdMobRewarded.addEventListener("rewardedVideoDidClose", () =>
+      console.log("Closed")
+    );
+    AdMobRewarded.addEventListener("rewardedVideoWillLeaveApplication", () =>
+      console.log("Left")
+    );
+
+    //user rewarded for watching video
+    AdMobRewarded.addEventListener("rewardedVideoDidRewardUser", () =>
+    this.rewardUser()
+  );
+  
+  }
+  
+  // componentWillUnmount() {
+  //   AdMobRewarded.removeAllListeners();
+  
+  // }
+  
+  
+  showRewarded() {
+    // first - load ads and only then - show
+    _openRewarded();
+  }
+
+  rewardUser () {
+  
+    console.log("Rewarded");
+    let user = firebase.auth().currentUser;
+    let uid = user.uid;
+    firebase
+      .database()
+      .ref("views/" + uid)
+      .set({
+        views: 1
+      });
+  }
+
+
+  
   render() {
     return (
-      <View>
-        <AdMobBanner
-          bannerSize="banner"
-          adUnitID="ca-app-pub-3940256099942544/2934735716"
-          testDeviceID="EMULATOR"
-          onDidFailToReceiveAdWithError={this.bannerError}
+      <View style={styles.container}>
+       
+       
+        <Button
+          title="Click Here"
+          onPress={this.showRewarded.bind(this)}
+          containerViewStyle={styles.rewardedBanner}
         />
-        <Text>REWARDED AD</Text>
-        <Button title="OPEN" color="green" onPress={this._openRewarded} />
+        <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID="ca-app-pub-3940256099942544/6300978111"
+          // Test ID, Replace with your-admob-unit-id
+          testDeviceID="EMULATOR"
+          didFailToReceiveAdWithError={this.bannerError}
+        />
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  rewardedBanner: {
+    width: "100%",
+    marginLeft: 0
+  },
+  interstitialBanner: {
+    width: "100%",
+    marginLeft: 0
+  },
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});

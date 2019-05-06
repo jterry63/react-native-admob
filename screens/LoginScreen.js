@@ -32,10 +32,8 @@ export default class LoginScreen extends React.Component {
     forgotPassword: "Forgot Password?",
     haveAccount: "Don't have an account yet?",
     signUp: "Sign Up",
-    showSignUp: "none",
     loggedIn: null,
     name: "",
-    newUser: false,
     showPasswordReset: "none",
     emailAddress: ''
   };
@@ -43,17 +41,17 @@ export default class LoginScreen extends React.Component {
   componentWillMount() {
   
     firebase.auth().onAuthStateChanged(user => {
-      if (user && !this.state.newUser) {
-        // this.setState({ loggedIn: true });
+      if (user && !this.state.newUser && user.photoURL) {
         console.log(user);
         this.props.navigation.navigate("Home");
       } else {
-        // this.setState({ loggedIn: false });
+     
       }
     });
   }
 
   onButtonPress() {
+    
     const { email, password } = this.state;
 
     this.setState({ error: "", loading: true });
@@ -70,7 +68,7 @@ export default class LoginScreen extends React.Component {
           .then(this.updateProfile.bind(this))
           .catch(this.onLoginFail.bind(this));
       });
-  }
+}
 
   onLoginFail() {
     this.setState({
@@ -88,14 +86,13 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  onSignUpClick() {
-    this.setState({
-      loginBtn: "Sign Up",
-      forgotPassword: "",
-      haveAccount: "",
-      signUp: "",
-      showSignUp: "block"
-    });
+
+  showSignUp() {
+    this.props.navigation.navigate("SignUp")
+  }
+
+  showPasswordReset() {
+    {this.props.navigation.navigate("ForgotPassword")}
   }
 
   updateProfile() {
@@ -103,34 +100,14 @@ export default class LoginScreen extends React.Component {
     user
       .updateProfile({
         displayName: this.state.name,
-        photoURL: "https://example.com/jane-q-user/profile.jpg"
       })
       .then(function() {
         console.log(user);
       })
-      .then(this.setState({ newUser: true }))
       .then(this.props.navigation.navigate("NewUser"))
       .catch(function(error) {
         // An error happened.
       });
-  }
-
-  showPasswordReset() {
-    // this.setState({showPasswordReset: "block"})
-    {this.props.navigation.navigate("ForgotPassword")}
-
-  }
-
-  passwordReset() {
-    
-    let auth = firebase.auth();
-    let emailAddress = this.state.emailAddress;
-    
-    auth.sendPasswordResetEmail(emailAddress).then(function() {
-      console.log('email sent');
-    }).catch(function(error) {
-      console.log(error);
-    });
   }
 
   renderButton() {
@@ -152,25 +129,6 @@ export default class LoginScreen extends React.Component {
         style={{ width: "100%", height: "100%" }}
       >
         <Card>
-          <View style={{ display: this.state.showSignUp }}>
-            <CardSection>
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: "rgba(255,255,255, 0.6)",
-                  marginRight: 10,
-                  marginTop: 10
-                }}
-              />
-              <Input
-                label="name"
-                placeholder="Name"
-                value={this.state.name}
-                onChangeText={name => this.setState({ name })}
-              />
-            </CardSection>
-          </View>
-
           <CardSection>
             <Text
               style={{
@@ -179,9 +137,8 @@ export default class LoginScreen extends React.Component {
                 marginRight: 10,
                 marginTop: 10
               }}
-            />
-
-            <Input
+              />
+              <Input
               autoCapitalize="none"
               label="Email"
               placeholder="Email"
@@ -211,7 +168,9 @@ export default class LoginScreen extends React.Component {
           <Text style={styles.errorTextStyle}>{this.state.error}</Text>
 
           <CardSection>{this.renderButton()}</CardSection>
+
         </Card>
+
         <View>
         <CardSection>
           <TouchableOpacity
@@ -229,36 +188,7 @@ export default class LoginScreen extends React.Component {
         </CardSection>
         </View>
         
-        <View style={{ display: this.state.showPasswordReset }}>
-            <CardSection>
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: "rgba(255,255,255, 0.6)",
-                  marginRight: 10,
-                  marginTop: 10
-                }}
-              />
-              <Input
-                autoCapitalize="none"
-                label="passwordReset"
-                placeholder="What is your email address?"
-                value={this.state.emailAddress}
-                onChangeText={emailAddress => this.setState({ emailAddress })}
-              />
-            </CardSection>
-
-            <CardSection>
-                <Button onPress={this.passwordReset.bind(this)}>Send</Button>
-            </CardSection>
-
-            
-
-            </View>
-        
-
-          
-
+    
         <CardSection>
           <TouchableOpacity
             disabled={true}
@@ -275,7 +205,7 @@ export default class LoginScreen extends React.Component {
 
         <CardSection>
           <TouchableOpacity
-            onPress={this.onSignUpClick.bind(this)}
+            onPress={this.showSignUp.bind(this)}
             style={{
               alignItems: "center",
               justifyContent: "center",

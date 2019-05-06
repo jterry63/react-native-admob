@@ -11,6 +11,7 @@ import AdScreen from "../screens/AdScreen";
 import InfoScreen from "../screens/InfoScreen";
 import NewUserScreen from "../screens/NewUserScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 
 
 const LoginStack = createStackNavigator({
@@ -18,6 +19,14 @@ const LoginStack = createStackNavigator({
 });
 
 LoginStack.navigationOptions = {
+  tabBarVisible: false
+};
+
+const SignUpStack = createStackNavigator({
+  SignUp: SignUpScreen
+});
+
+SignUpStack.navigationOptions = {
   tabBarVisible: false
 };
 
