@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "flex-start"
   },
   firstrow: {
     flex: 1,
@@ -261,10 +261,10 @@ const styles = StyleSheet.create({
     marginTop: "25%"
   },
   header: {
-    backgroundColor: "white"
+    backgroundColor: "white",
+    marginTop: 30
   },
   headerContent: {
-    padding: 30,
     alignItems: "center"
   },
   avatar: {
@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
   },
   body: {
     backgroundColor: "white",
-    height: 500,
     alignItems: "center"
   },
   item: {
@@ -301,7 +300,7 @@ const styles = StyleSheet.create({
   },
   iconContent: {
     flex: 1,
-    alignItems: "flex-end",
+    alignItems: "center",
     paddingRight: 5
   },
   icon: {
@@ -316,8 +315,8 @@ const styles = StyleSheet.create({
   },
   bottom: {
     flex: 1,
-    justifyContent: "flex-end",
-    marginBottom: 10
+    justifyContent: "center",
+ 
   }
 });
 

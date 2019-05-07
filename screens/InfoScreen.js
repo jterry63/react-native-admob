@@ -23,16 +23,11 @@ export default class AdScreen extends React.Component {
 
   render() {
     return (
-      // <View style={styles.container}>
-      //     <Text style={styles.text}>
-      //         This is where our amazing explanation will go.
-      //     </Text>
+ 
 
-      // </View>
-
-      <View>
+      <View style={styles.container}>
         <View style={styles.modalContainer}>
-          <View>
+          <View style={{marginTop: 30}}>
             <Text style={styles.modalText}>Welcome to Charity Ads!</Text>
             <View style={styles.instructions}>
               <Text style={{ fontSize: 30, color: "white" }}>1. do this</Text>
@@ -44,18 +39,12 @@ export default class AdScreen extends React.Component {
               </Text>
             </View>
 
-            <TouchableHighlight
-              style={styles.hideModal}
-              onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-              }}
-            >
-              <Text style={styles.getStartedBtn}>Get Started!</Text>
-            </TouchableHighlight>
+           
           </View>
         </View>
 
         <TouchableHighlight
+        style={{display: 'none'}}
           onPress={() => {
             this.setModalVisible(true);
           }}
@@ -75,14 +64,12 @@ const styles = StyleSheet.create({
 
   modalText: {
     color: "white",
-    marginTop: "25%",
+    paddingTop: 10,
     textAlign: "center",
-    fontSize: 75,
+    fontSize: 30,
     fontFamily: "adlery"
   },
-  hideModal: {
-    marginTop: 50
-  },
+
   getStartedBtn: {
     color: "#f5f5f5",
     textAlign: "center",
@@ -93,5 +80,27 @@ const styles = StyleSheet.create({
   },
   instructions: {
     marginTop: "25%"
+  },
+
+
+  container: {
+    flex: 1,
+    backgroundColor: '#23accd',
+    justifyContent: "center"
+    },
+  errorTextStyle: {
+    fontSize: 20,
+    alignSelf: "center",
+    color: "white"
+  },
+  logo: {
+    fontFamily: 'adlery',
+    color: 'white',
+    fontSize: 80,
+    textAlign: 'center',
+    paddingTop: 10,
+
   }
+
+
 });

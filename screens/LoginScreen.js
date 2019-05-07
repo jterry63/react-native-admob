@@ -6,8 +6,9 @@ import {
   Input,
   Spinner
 } from "../components/common";
+import { FadeInView } from "../components/FadeInView";
 import firebase from "firebase";
-import { Text, ImageBackground, TouchableOpacity, View } from "react-native";
+import { Text, ImageBackground, TouchableOpacity, View, StyleSheet } from "react-native";
 
 firebase.initializeApp({
     apiKey: "AIzaSyBFVFx_WPZzA2uQUP3zYcNp3Wtcn_HJROM",
@@ -124,10 +125,14 @@ export default class LoginScreen extends React.Component {
 
   render() {
     return (
-      <ImageBackground
-        source={{ uri: "https://i.imgur.com/HH3twbC.png" }}
-        style={{ width: "100%", height: "100%" }}
-      >
+    
+      <View style={styles.container}>
+        
+        <FadeInView>
+          <Text style={styles.logo}>
+            Charity{"\n"}Ads
+          </Text>
+        </FadeInView>
         <Card>
           <CardSection>
             <Text
@@ -135,7 +140,7 @@ export default class LoginScreen extends React.Component {
                 fontSize: 20,
                 color: "rgba(255,255,255, 0.6)",
                 marginRight: 10,
-                marginTop: 10
+               
               }}
               />
               <Input
@@ -153,7 +158,7 @@ export default class LoginScreen extends React.Component {
                 fontSize: 20,
                 color: "rgba(255,255,255, 0.6)",
                 marginRight: 10,
-                marginTop: 10
+            
               }}
             />
             <Input
@@ -171,14 +176,16 @@ export default class LoginScreen extends React.Component {
 
         </Card>
 
+        
+
         <View>
         <CardSection>
           <TouchableOpacity
           onPress={this.showPasswordReset.bind(this)}
             style={{
               alignItems: "center",
-              justifyContent: "center",
-              width: "100%"
+              width: "100%",
+              marginTop: 20
             }}
           >
             <Text style={{ color: "white", fontWeight: "bold" }}>
@@ -194,9 +201,8 @@ export default class LoginScreen extends React.Component {
             disabled={true}
             style={{
               alignItems: "center",
-              justifyContent: "center",
               width: "100%",
-              marginTop: "25%"
+             
             }}
           >
             <Text style={{ color: "white" }}>{this.state.haveAccount}</Text>
@@ -210,7 +216,7 @@ export default class LoginScreen extends React.Component {
               alignItems: "center",
               justifyContent: "center",
               width: "100%",
-              marginTop: "10%"
+              
             }}
           >
             <Text style={{ color: "white", fontWeight: "bold" }}>
@@ -218,15 +224,33 @@ export default class LoginScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </CardSection>
-      </ImageBackground>
+        </View>
+
+      // </ImageBackground>
     );
   }
 }
 
-const styles = {
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#23accd',
+    justifyContent: "center"
+    },
   errorTextStyle: {
     fontSize: 20,
     alignSelf: "center",
     color: "white"
+  },
+  logo: {
+    fontFamily: 'adlery',
+    color: 'white',
+    fontSize: 80,
+    textAlign: 'center',
+    paddingTop: 10,
+
   }
-};
+});
+
