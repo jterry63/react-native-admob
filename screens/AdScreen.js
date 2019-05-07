@@ -10,19 +10,13 @@ import firebase from 'firebase';
     await AdMobRewarded.showAdAsync();
   };
 
-  state = {
-    counter: 1
-  }
-
-
-
-
 export default class AdScreen extends React.Component {
+
+  state = {
+    counter: 0
+  };
+
 componentDidMount() {
-
-
-
-
 
 
     AdMobRewarded.setTestDeviceID("EMULATOR");
@@ -64,15 +58,16 @@ componentDidMount() {
   }
 
   rewardUser () {
-  
+    this.setState({ counter: this.state.counter + 1})
     console.log("Rewarded");
+    console.log("view count: " + this.state.counter)
     let user = firebase.auth().currentUser;
     let uid = user.uid;
     firebase
       .database()
       .ref("views/" + uid)
       .set({
-        views: 1
+        views: this.state.counter
       });
   }
 

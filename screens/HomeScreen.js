@@ -8,7 +8,9 @@ import {
   Alert,
   TouchableHighlight
 } from "react-native";
+import { Spinner } from "../components/common"
 import firebase from "firebase";
+
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -22,24 +24,47 @@ export default class HomeScreen extends React.Component {
     }
   };
 
-  state = {
+  constructor() {
+    super()
+    this.user = firebase.auth().currentUser
+    this.database = firebase.database().ref("/views/" + this.user.uid).child("views")
+
+  this.state = {
+    loading: false,
     modalVisible: false,
     userName: "",
-    userEmail: ""
-  };
+    userEmail: "",
+    viewCount: 0,
+  }
+}
 
   componentDidMount() {
-    let user = firebase.auth().currentUser;
-    let name = user.displayName;
-    let email = user.email;
-    this.setUserData(name, email);
+    this.database.on('value', snap => {
+      this.setState({ viewCount: snap.val()})
+      console.log("views: " + this.state.viewCount)
+    })
+
+    this.setState({ 
+      userName: this.user.displayName,
+      userEmail: this.user.email
+    })
+
   }
 
-  setUserData(name, email) {
-    this.setState({
-      userName: name,
-      userEmail: email
-    });
+
+
+
+  renderButton() {
+    if (this.state.loading) {
+      return <Spinner size="small" />;
+    }
+
+    return (
+      <View>
+        <Text style={styles.textColor}>Views:</Text>
+        <Text style={styles.views}>{this.state.viewCount}</Text>
+        </View>
+    );
   }
 
   setModalVisible(visible) {
@@ -53,23 +78,8 @@ export default class HomeScreen extends React.Component {
       console.error('Sign Out Error', error);
     });
 
-  
-
     this.props.navigation.navigate("Login")
-    // this.props.navigation.goBack()
-
   };
-
-  storeHighScore(score) {
-    var user = firebase.auth().currentUser;
-    var uid = user.uid;
-    firebase
-      .database()
-      .ref("users/" + uid)
-      .set({
-        highscore: score
-      });
-  }
 
   render() {
     return (
@@ -78,7 +88,6 @@ export default class HomeScreen extends React.Component {
           <TouchableHighlight
             onPress={() => {
               this.setModalVisible(true);
-              this.storeHighScore(31);
             }}
           >
             <Image
@@ -91,14 +100,9 @@ export default class HomeScreen extends React.Component {
           </Text>
         </View>
 
-        <View style={styles.secondrow}>
-          <Text style={styles.textColor}>Views Today:</Text>
-          <Text style={styles.views}>3</Text>
-        </View>
 
-        <View style={styles.thirdrow}>
-          <Text style={styles.textColor}>Total Views:</Text>
-          <Text style={styles.views}>17</Text>
+        <View style={styles.secondrow}>
+          {this.renderButton()}
         </View>
 
         <View style={styles.fourthrow} />
