@@ -14,14 +14,7 @@ import firebase from "firebase";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: "charity ads",
-    headerTitleStyle: {
-      fontFamily: "adlery",
-      fontSize: 25
-    },
-    headerStyle: {
-      backgroundColor: "whitesmoke"
-    }
+    header: null
   };
 
   constructor() {
@@ -31,7 +24,6 @@ export default class HomeScreen extends React.Component {
 
   this.state = {
     loading: false,
-    modalVisible: false,
     userName: "",
     userEmail: "",
     viewCount: 0,
@@ -51,9 +43,6 @@ export default class HomeScreen extends React.Component {
 
   }
 
-
-
-
   renderButton() {
     if (this.state.loading) {
       return <Spinner size="small" />;
@@ -65,10 +54,6 @@ export default class HomeScreen extends React.Component {
         <Text style={styles.views}>{this.state.viewCount}</Text>
         </View>
     );
-  }
-
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
   }
 
   logOut = () => {
@@ -85,19 +70,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.firstrow}>
-          <TouchableHighlight
-            onPress={() => {
-              this.setModalVisible(true);
-            }}
-          >
-            <Image
-              source={{ uri: "https://i.imgur.com/WMy7Wid.png" }}
-              style={{ width: 115, height: 115, borderRadius: 55 }}
-            />
-          </TouchableHighlight>
-          <Text style={{ marginTop: 10, fontSize: 15 }}>
-            {this.state.userName}
-          </Text>
+       
         </View>
 
 
@@ -107,61 +80,10 @@ export default class HomeScreen extends React.Component {
 
         <View style={styles.fourthrow} />
 
-        <View style={{ marginTop: 22 }}>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-            }}
-          >
-            <View style={styles.container}>
-              <View style={styles.header}>
-                <View style={styles.headerContent}>
-                  <Image
-                    style={styles.avatar}
-                    source={{ uri: "https://i.imgur.com/WMy7Wid.png" }}
-                  />
-
-                  <Text style={styles.name}>{this.state.userName}</Text>
-                  <Text style={styles.userInfo}>{this.state.userEmail}</Text>
-                </View>
-              </View>
-
-              <View style={styles.body}>
-                <View style={styles.item}>
-                  <Text style={styles.info}>Settings</Text>
-                </View>
-
-                <TouchableHighlight
-                  onPress={() => {
-                    this.logOut();
-                  }}
-                >
-                  <View style={styles.item}>
-                    <Text style={styles.info}>Sign Out</Text>
-                  </View>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                  style={styles.bottom}
-                  onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                  }}
-                >
-                  <View>
-                    <Text style={styles.info}>Close</Text>
-                  </View>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </Modal>
-
           <TouchableHighlight>
             <Text style={{ display: "none" }}>Show Modal</Text>
           </TouchableHighlight>
-        </View>
+       
       </View>
     );
   }

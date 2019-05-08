@@ -10,7 +10,7 @@ import {
 
 export default class AdScreen extends React.Component {
   static navigationOptions = {
-    title: "Info"
+    header: null
   };
 
   state = {

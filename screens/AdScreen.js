@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { AdMobBanner, AdMobInterstitial, AdMobRewarded } from "expo";
+import { Button, StyleSheet, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
+import { AdMobBanner, AdMobInterstitial, AdMobRewarded} from "expo";
+import { EvilIcons } from '@expo/vector-icons';
 import firebase from 'firebase';
 
 
@@ -12,11 +13,60 @@ import firebase from 'firebase';
 
 export default class AdScreen extends React.Component {
 
-  state = {
-    counter: 0
+  static navigationOptions = {
+    header: null
   };
 
+  constructor() {
+    super()
+    this.user = firebase.auth().currentUser
+    this.database = firebase.database().ref("/views/" + this.user.uid).child("views")
+
+  this.state = {
+    counter: 0,
+    loading: false
+  };
+}
+
+  renderButton() {
+    if (this.state.loading) {
+      return <ActivityIndicator size="large" color="#23accd" />;
+    
+    }
+
+    return (
+      <TouchableOpacity
+      onPress={this.showRewarded.bind(this)}
+      style={{
+       borderWidth:1,
+       borderColor:'rgba(0,0,0,0.2)',
+       alignItems:'center',
+       justifyContent:'center',
+       width:100,
+       height:100,
+       backgroundColor:'#fff',
+       borderRadius:50,
+       shadowColor: 'silver',
+       shadowOffset: { height: 2, width: 2 },
+       shadowOpacity: 1,
+       shadowRadius: 1.5
+     }}
+    >
+      <Text style={{textAlign: 'center', color: '#929394'}}><EvilIcons name="play" size={45} color="#929394" />{"\n"}Watch Ad</Text>
+    </TouchableOpacity>
+    );
+  }
+
+  openedVideo() {
+    console.log("Opened");
+    this.setState({ loading: false})
+  }
+
 componentDidMount() {
+
+  this.database.on('value', snap => {
+    this.setState({ counter: snap.val()})
+  })
 
 
     AdMobRewarded.setTestDeviceID("EMULATOR");
@@ -30,7 +80,8 @@ componentDidMount() {
       console.log("Failed to load")
     );
     AdMobRewarded.addEventListener("rewardedVideoDidOpen", () =>
-      console.log("Opened")
+      this.openedVideo()
+      
     );
     AdMobRewarded.addEventListener("rewardedVideoDidClose", () =>
       console.log("Closed")
@@ -53,7 +104,7 @@ componentDidMount() {
   
   
   showRewarded() {
-    // first - load ads and only then - show
+    this.setState({ loading: true})
     _openRewarded();
   }
 
@@ -69,6 +120,8 @@ componentDidMount() {
       .set({
         views: this.state.counter
       });
+   
+      
   }
 
 
@@ -76,21 +129,31 @@ componentDidMount() {
   render() {
     return (
       <View style={styles.container}>
-       
-       
-        <Button
-          title="Click Here"
-          onPress={this.showRewarded.bind(this)}
-          containerViewStyle={styles.rewardedBanner}
-        />
-        <AdMobBanner
+        {this.renderButton()}
+        {/* <AdMobBanner
           style={styles.bottomBanner}
           bannerSize="fullBanner"
           adUnitID="ca-app-pub-3940256099942544/6300978111"
-          // Test ID, Replace with your-admob-unit-id
           testDeviceID="EMULATOR"
           didFailToReceiveAdWithError={this.bannerError}
-        />
+        /> */}
+
+
+    {/* <TouchableOpacity
+      onPress={this.showRewarded.bind(this)}
+      style={{
+       borderWidth:1,
+       borderColor:'rgba(0,0,0,0.2)',
+       alignItems:'center',
+       justifyContent:'center',
+       width:100,
+       height:100,
+       backgroundColor:'#fff',
+       borderRadius:50,
+     }}
+    >
+      <Text style={{textAlign: 'center', color: '#929394'}}><EvilIcons name="play" size={45} color="#929394" />{"\n"}Watch Ad</Text>
+    </TouchableOpacity> */}
       </View>
     );
   }

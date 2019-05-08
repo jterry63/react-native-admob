@@ -12,6 +12,8 @@ import InfoScreen from "../screens/InfoScreen";
 import NewUserScreen from "../screens/NewUserScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import SignUpScreen from "../screens/SignUpScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
 
 
 const LoginStack = createStackNavigator({
@@ -49,6 +51,28 @@ NewUserStack.navigationOptions = {
 const HomeStack = createStackNavigator({
   Home: HomeScreen
 });
+
+const ProfileStack = createStackNavigator({
+  Profile: ProfileScreen
+});
+
+ProfileStack.navigationOptions = {
+  tabBarLabel: "Profile",
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === "ios" ? "ios-contact" : "md-contact"}
+    />
+  )
+};
+
+const EditProfileStack = createStackNavigator({
+  EditProfile: EditProfileScreen
+});
+
+EditProfileStack.navigationOptions = {
+  tabBarVisible: false
+};
 
 HomeStack.navigationOptions = {
   tabBarLabel: "Home",
@@ -89,7 +113,7 @@ AdStack.navigationOptions = {
 // };
 
 const InfoStack = createStackNavigator({
-  Info: InfoScreen
+  Info: InfoScreen,
 });
 
 InfoStack.navigationOptions = {
@@ -107,8 +131,18 @@ InfoStack.navigationOptions = {
   )
 };
 
-export default createBottomTabNavigator({
-  AdStack,
-  HomeStack,
-  InfoStack
-});
+export default createBottomTabNavigator(
+  {
+  Ads: AdStack,
+  Home: HomeStack,
+  Info: InfoStack,
+  Profile: ProfileStack,
+  },
+  { tabBarOptions: {
+    showLabel: false,
+    style: {
+      backgroundColor: 'white'
+  }
+  }}
+
+);

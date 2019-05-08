@@ -147,6 +147,7 @@ export default class LoginScreen extends React.Component {
               autoCapitalize="none"
               label="Email"
               placeholder="Email"
+              placeholderTextColor='rgba(255,255,255, 0.9)'
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
             />
@@ -165,6 +166,7 @@ export default class LoginScreen extends React.Component {
               secureTextEntry
               label="Password"
               placeholder="Password"
+              placeholderTextColor='rgba(255,255,255, 0.9)'
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
             />
