@@ -7,7 +7,7 @@ import {
   Spinner
 } from "../components/common";
 import firebase from "firebase";
-import { Text, ImageBackground, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Text, ImageBackground, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
 
 export default class SignUpScreen extends React.Component {
   static navigationOptions = {
@@ -24,17 +24,32 @@ export default class SignUpScreen extends React.Component {
     signUp: "Sign Up",
     showSignUp: "none",
     loggedIn: null,
-    name: "",
+    first: "",
+    last: "",
     newUser: false,
     showPasswordReset: "none",
-    emailAddress: ''
+    emailAddress: '',
+    inputEditable: true
   };
   
 
   onButtonPress() {
+
+
+    if (this.state.password.length < 6) {
+      this.passwordFail();
+    }
+
+    if (this.state.email === "" || this.state.first === "" | this.state.last === "") {
+      this.fieldMissing();
+    }
+
+    
+    else {
+
     const { email, password } = this.state;
 
-    this.setState({ error: "", loading: true });
+    this.setState({ error: "", loading: true, inputEditable: false });
 
     firebase
       .auth()
@@ -42,13 +57,54 @@ export default class SignUpScreen extends React.Component {
       .then(this.onLoginSuccess.bind(this))
       .then(this.updateProfile.bind(this))
       .catch(this.onLoginFail.bind(this));
+    }
   }
+
+  passwordFail() {
+    this.setState({
+      loading: false,
+      inputEditable: true
+    })
+    Alert.alert(
+      'Please try again...',
+      'Your password must be at least 6 characters',
+      [
+        {text: 'OK', onPress: () => this.props.navigation.navigate("Sign Up")},
+      ],
+      {cancelable: false},
+    );
+  }
+
+  fieldMissing() {
+    this.setState({
+      loading: false,
+      inputEditable: true
+    })
+    Alert.alert(
+      'Please try again...',
+      'All fields are required. Please finish filling out each item before signing up',
+      [
+        {text: 'OK', onPress: () => this.props.navigation.navigate("Sign Up")},
+      ],
+      {cancelable: false},
+    );
+  }
+
 
   onLoginFail() {
     this.setState({
       error: "",
-      loading: false
+      loading: false,
+      inputEditable: true
     });
+    Alert.alert(
+      'Please try again...',
+      'This email address is already in use. Please choose a different email address',
+      [
+        {text: 'OK', onPress: () => this.props.navigation.navigate("Sign Up")},
+      ],
+      {cancelable: false},
+    );
   }
 
   onLoginSuccess() {
@@ -72,7 +128,7 @@ export default class SignUpScreen extends React.Component {
     var user = firebase.auth().currentUser;
     user
       .updateProfile({
-        displayName: this.state.name,
+        displayName: this.state.first + " " + this.state.last,
         photoURL: "https://i.imgur.com/WMy7Wid.png"
       })
       .then(function() {
@@ -118,14 +174,35 @@ export default class SignUpScreen extends React.Component {
                 }}
               />
               <Input
-                label="name"
-                placeholder="Name"
+                label="firstName"
+                placeholder="First Name"
                 placeholderTextColor='rgba(255,255,255, 0.9)'
-                value={this.state.name}
-                onChangeText={name => this.setState({ name })}
+                value={this.state.first}
+                onChangeText={first => this.setState({ first })}
+                editable={this.state.inputEditable}
               />
             </CardSection>
           </View>
+
+          <CardSection>
+            <Text
+              style={{
+                fontSize: 20,
+                color: "rgba(255,255,255, 0.6)",
+                marginRight: 10,
+                marginTop: 10
+              }}
+            />
+
+            <Input
+              label="lastName"
+              placeholder="Last Name"
+              placeholderTextColor='rgba(255,255,255, 0.9)'
+              value={this.state.last}
+              onChangeText={last => this.setState({ last })}
+              editable={this.state.inputEditable}
+            />
+          </CardSection>
 
           <CardSection>
             <Text
@@ -144,6 +221,7 @@ export default class SignUpScreen extends React.Component {
               placeholderTextColor='rgba(255,255,255, 0.9)'
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
+              editable={this.state.inputEditable}
             />
           </CardSection>
 
@@ -159,10 +237,11 @@ export default class SignUpScreen extends React.Component {
             <Input
               secureTextEntry
               label="Password"
-              placeholder="Password"
+              placeholder="Password (6 character minimum)"
               placeholderTextColor='rgba(255,255,255, 0.9)'
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
+              editable={this.state.inputEditable}
             />
           </CardSection>
 

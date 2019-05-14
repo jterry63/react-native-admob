@@ -2,7 +2,7 @@ import React from 'react';
 import { TextInput, View, Text} from 'react-native';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 
-const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, autoCapitalize, placeholderTextColor, }) => {
+const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, autoCapitalize, placeholderTextColor, editable, keyboardType, returnKeyType, onSubmitEditing, ref }) => {
     const { inputStyle, labelStyle, containerStyle } = styles;
 
     return(
@@ -18,6 +18,11 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, autoC
                 style={inputStyle}
                 value={value}
                 onChangeText={onChangeText}
+                editable={editable}
+                keyboardType={keyboardType}
+                returnKeyType={returnKeyType}
+                onSubmitEditing={onSubmitEditing}
+                ref={ref}
             />
             
         </View>

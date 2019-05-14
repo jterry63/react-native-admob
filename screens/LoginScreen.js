@@ -8,7 +8,7 @@ import {
 } from "../components/common";
 import { FadeInView } from "../components/FadeInView";
 import firebase from "firebase";
-import { Text, ImageBackground, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Text, ImageBackground, TouchableOpacity, View, StyleSheet, Alert, TextInput } from "react-native";
 
 firebase.initializeApp({
     apiKey: "AIzaSyBFVFx_WPZzA2uQUP3zYcNp3Wtcn_HJROM",
@@ -36,7 +36,8 @@ export default class LoginScreen extends React.Component {
     loggedIn: null,
     name: "",
     showPasswordReset: "none",
-    emailAddress: ''
+    emailAddress: '',
+    inputEditable: true
   };
 
   componentWillMount() {
@@ -55,27 +56,39 @@ export default class LoginScreen extends React.Component {
     
     const { email, password } = this.state;
 
-    this.setState({ error: "", loading: true });
+    this.setState({ error: "", loading: true, inputEditable: false });
 
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(this.onLoginSuccess.bind(this))
-      .catch(() => {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then(this.onLoginSuccess.bind(this))
-          .then(this.updateProfile.bind(this))
-          .catch(this.onLoginFail.bind(this));
-      });
+      .catch(this.onLoginFail.bind(this));
+    
+      // .catch(() => {
+      //   firebase
+      //     .auth()
+      //     .createUserWithEmailAndPassword(email, password)
+      //     .then(this.onLoginSuccess.bind(this))
+      //     .then(this.updateProfile.bind(this))
+      //     .catch(this.onLoginFail.bind(this));
+      // });
 }
 
   onLoginFail() {
     this.setState({
-      error: "",
-      loading: false
+      // error: "Incorrect username or password",
+      loading: false,
+      inputEditable: true
     });
+    Alert.alert(
+      'Please try again...',
+      'The email and password you entered did not match our records. Please double-check and try again.',
+      [
+        {text: 'OK', onPress: () => this.props.navigation.navigate("Login")},
+      ],
+      {cancelable: false},
+    );
+    
   }
 
   onLoginSuccess() {
@@ -143,13 +156,20 @@ export default class LoginScreen extends React.Component {
                
               }}
               />
-              <Input
+              <TextInput
+              style={styles.inputStyle}
               autoCapitalize="none"
               label="Email"
               placeholder="Email"
               placeholderTextColor='rgba(255,255,255, 0.9)'
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
+              editable={this.state.inputEditable}
+              keyboardType={"email-address"}
+              returnKeyType={"next"}
+              blurOnSubmit={false}
+              onSubmitEditing={() => this.passwordRef.focus()}
+ 
             />
           </CardSection>
 
@@ -162,13 +182,19 @@ export default class LoginScreen extends React.Component {
             
               }}
             />
-            <Input
+            <TextInput
+              style={styles.inputStyle}
               secureTextEntry
               label="Password"
               placeholder="Password"
               placeholderTextColor='rgba(255,255,255, 0.9)'
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
+              editable={this.state.inputEditable}
+              returnKeyType={"go"}
+              ref={ref => this.passwordRef = ref} 
+              onSubmitEditing={this.onButtonPress.bind(this)}
+             
             />
           </CardSection>
 
@@ -242,9 +268,9 @@ const styles = StyleSheet.create({
     justifyContent: "center"
     },
   errorTextStyle: {
-    fontSize: 20,
+    fontSize: 15,
     alignSelf: "center",
-    color: "white"
+    color: "red"
   },
   logo: {
     fontFamily: 'adlery',
@@ -253,6 +279,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 10,
 
-  }
+  },
+  inputStyle: {
+    color: 'white',
+    borderWidth: 2,
+    
+    borderColor: 'rgba(255,255,255, 0.3)',
+    paddingRight: 5,
+    paddingLeft: 25,
+    fontSize: 18,
+    lineHeight: 23,
+    flex: 2,
+    height: 40,
+    borderRadius: 25
+  
+}
 });
 
