@@ -8,7 +8,8 @@ import {
 } from "../components/common";
 import { FadeInView } from "../components/FadeInView";
 import firebase from "firebase";
-import { Text, ImageBackground, TouchableOpacity, View, StyleSheet, Alert, TextInput } from "react-native";
+import { Text, ImageBackground, TouchableOpacity, View, StyleSheet, Alert, TextInput, KeyboardAvoidingView, InputAccessoryView, Keyboard } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 
 firebase.initializeApp({
     apiKey: "AIzaSyBFVFx_WPZzA2uQUP3zYcNp3Wtcn_HJROM",
@@ -137,9 +138,10 @@ export default class LoginScreen extends React.Component {
   }
 
   render() {
+    const inputAccessoryViewID = "uniqueID";
     return (
     
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         
         <FadeInView>
           <Text style={styles.logo}>
@@ -169,8 +171,28 @@ export default class LoginScreen extends React.Component {
               returnKeyType={"next"}
               blurOnSubmit={false}
               onSubmitEditing={() => this.passwordRef.focus()}
+              inputAccessoryViewID={inputAccessoryViewID}
  
             />
+
+
+{/* custom button for keyboard dismissal ---------------------------- */}
+        <InputAccessoryView nativeID={inputAccessoryViewID}>
+          <TouchableOpacity 
+            style={{backgroundColor: '#23accd', height: 25, justifyContent: 'center'}}
+            onPress={Keyboard.dismiss}
+            >
+            <Text style={{ textAlign: 'center'}}>
+
+            <Ionicons name="ios-arrow-down" size={30} color="white" />
+            
+            </Text>
+            
+            
+          </TouchableOpacity>
+        </InputAccessoryView>
+{/* ------------------------------------------------------------------- */}
+
           </CardSection>
 
           <CardSection>
@@ -193,7 +215,9 @@ export default class LoginScreen extends React.Component {
               editable={this.state.inputEditable}
               returnKeyType={"go"}
               ref={ref => this.passwordRef = ref} 
+              blurOnSubmit={false}
               onSubmitEditing={this.onButtonPress.bind(this)}
+              inputAccessoryViewID={inputAccessoryViewID}
              
             />
           </CardSection>
@@ -252,7 +276,9 @@ export default class LoginScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </CardSection>
-        </View>
+
+  
+        </KeyboardAvoidingView>
 
       // </ImageBackground>
     );
@@ -283,7 +309,6 @@ const styles = StyleSheet.create({
   inputStyle: {
     color: 'white',
     borderWidth: 2,
-    
     borderColor: 'rgba(255,255,255, 0.3)',
     paddingRight: 5,
     paddingLeft: 25,
@@ -291,8 +316,7 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     flex: 2,
     height: 40,
-    borderRadius: 25
-  
+    borderRadius: 25 
 }
 });
 

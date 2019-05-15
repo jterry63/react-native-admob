@@ -7,7 +7,8 @@ import {
   Spinner
 } from "../components/common";
 import firebase from "firebase";
-import { Text, ImageBackground, TouchableOpacity, View, Alert, StyleSheet } from "react-native";
+import { Text, ImageBackground, TouchableOpacity, View, Alert, StyleSheet, TextInput, KeyboardAvoidingView, InputAccessoryView, Keyboard  } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default class ForgotPasswordScreen extends React.Component {
@@ -57,9 +58,10 @@ export default class ForgotPasswordScreen extends React.Component {
   }
 
   render() {
+    const inputAccessoryViewID = "uniqueID";
     return (
    
-  <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
     <View>
           <Text style={styles.logo}>
             Charity{"\n"}Ads
@@ -76,13 +78,18 @@ export default class ForgotPasswordScreen extends React.Component {
               marginTop: 10
             }}
           />
-          <Input
+          <TextInput
+            style={styles.inputStyle}
             autoCapitalize="none"
             label="passwordReset"
             placeholder="What is your email address?"
             placeholderTextColor='rgba(255,255,255, 0.9)'
             value={this.state.emailAddress}
             onChangeText={emailAddress => this.setState({ emailAddress })}
+            inputAccessoryViewID={inputAccessoryViewID}
+            keyboardType={"email-address"}
+            returnKeyType={"send"}
+            onSubmitEditing={this.passwordReset.bind(this)}
           />
          
         </CardSection>
@@ -106,10 +113,29 @@ export default class ForgotPasswordScreen extends React.Component {
           </TouchableOpacity>
         </CardSection>
 
+
+{/* custom button for keyboard dismissal ---------------------------- */}
+        <InputAccessoryView nativeID={inputAccessoryViewID}>
+          <TouchableOpacity 
+            style={{backgroundColor: '#23accd', height: 25, justifyContent: 'center'}}
+            onPress={Keyboard.dismiss}
+            >
+            <Text style={{ textAlign: 'center'}}>
+
+            <Ionicons name="ios-arrow-down" size={30} color="white" />
+            
+            </Text>
+            
+            
+          </TouchableOpacity>
+        </InputAccessoryView>
+{/* ------------------------------------------------------------------- */}
+
+
 </Card>
         
 
-        </View>
+        </KeyboardAvoidingView>
     
     
 
@@ -142,5 +168,17 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginBottom: 60
 
-  }
+  },
+  inputStyle: {
+    color: 'white',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255, 0.3)',
+    paddingRight: 5,
+    paddingLeft: 25,
+    fontSize: 18,
+    lineHeight: 23,
+    flex: 2,
+    height: 40,
+    borderRadius: 25 
+}
 });

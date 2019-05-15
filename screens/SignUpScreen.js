@@ -7,7 +7,8 @@ import {
   Spinner
 } from "../components/common";
 import firebase from "firebase";
-import { Text, ImageBackground, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
+import { Text, ImageBackground, TouchableOpacity, View, StyleSheet, Alert, TextInput, KeyboardAvoidingView, InputAccessoryView, Keyboard } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 
 export default class SignUpScreen extends React.Component {
   static navigationOptions = {
@@ -155,8 +156,9 @@ export default class SignUpScreen extends React.Component {
   }
 
   render() {
+    const inputAccessoryViewID = "uniqueID";
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <View>
           <Text style={styles.logo}>
             Charity{"\n"}Ads
@@ -173,13 +175,19 @@ export default class SignUpScreen extends React.Component {
                   marginTop: 10
                 }}
               />
-              <Input
+              <TextInput
+                style={styles.inputStyle}
                 label="firstName"
                 placeholder="First Name"
                 placeholderTextColor='rgba(255,255,255, 0.9)'
                 value={this.state.first}
                 onChangeText={first => this.setState({ first })}
                 editable={this.state.inputEditable}
+                returnKeyType={"next"}
+                blurOnSubmit={false}
+                onSubmitEditing={() => this.lastNameRef.focus()}
+                inputAccessoryViewID={inputAccessoryViewID}
+                
               />
             </CardSection>
           </View>
@@ -194,13 +202,19 @@ export default class SignUpScreen extends React.Component {
               }}
             />
 
-            <Input
+            <TextInput
+              style={styles.inputStyle}
               label="lastName"
               placeholder="Last Name"
               placeholderTextColor='rgba(255,255,255, 0.9)'
               value={this.state.last}
               onChangeText={last => this.setState({ last })}
               editable={this.state.inputEditable}
+              ref={ref => this.lastNameRef = ref} 
+              returnKeyType={"next"}
+              blurOnSubmit={false}
+              onSubmitEditing={() => this.emailRef.focus()}
+              inputAccessoryViewID={inputAccessoryViewID}
             />
           </CardSection>
 
@@ -214,7 +228,8 @@ export default class SignUpScreen extends React.Component {
               }}
             />
 
-            <Input
+            <TextInput
+              style={styles.inputStyle}
               autoCapitalize="none"
               label="Email"
               placeholder="Email"
@@ -222,6 +237,11 @@ export default class SignUpScreen extends React.Component {
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
               editable={this.state.inputEditable}
+              ref={ref => this.emailRef = ref} 
+              returnKeyType={"next"}
+              blurOnSubmit={false}
+              onSubmitEditing={() => this.passwordRef.focus()}
+              inputAccessoryViewID={inputAccessoryViewID}
             />
           </CardSection>
 
@@ -234,7 +254,8 @@ export default class SignUpScreen extends React.Component {
                 marginTop: 10
               }}
             />
-            <Input
+            <TextInput
+              style={styles.inputStyle}
               secureTextEntry
               label="Password"
               placeholder="Password (6 character minimum)"
@@ -242,6 +263,11 @@ export default class SignUpScreen extends React.Component {
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
               editable={this.state.inputEditable}
+              ref={ref => this.passwordRef = ref} 
+              returnKeyType={"go"}
+              blurOnSubmit={false}
+              onSubmitEditing={this.onButtonPress.bind(this)}
+              inputAccessoryViewID={inputAccessoryViewID}
             />
           </CardSection>
 
@@ -265,9 +291,26 @@ export default class SignUpScreen extends React.Component {
         </CardSection>
 
 
+{/* custom button for keyboard dismissal ---------------------------- */}
+        <InputAccessoryView nativeID={inputAccessoryViewID}>
+          <TouchableOpacity 
+            style={{backgroundColor: '#23accd', height: 25, justifyContent: 'center'}}
+            onPress={Keyboard.dismiss}
+            >
+            <Text style={{ textAlign: 'center'}}>
+
+            <Ionicons name="ios-arrow-down" size={30} color="white" />
+            
+            </Text>
+            
+            
+          </TouchableOpacity>
+        </InputAccessoryView>
+{/* ------------------------------------------------------------------- */}
+
         </Card>
     
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -289,6 +332,17 @@ const styles = StyleSheet.create({
     fontSize: 80,
     textAlign: 'center',
     paddingTop: 10,
-
-  }
+  },
+  inputStyle: {
+    color: 'white',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255, 0.3)',
+    paddingRight: 5,
+    paddingLeft: 25,
+    fontSize: 18,
+    lineHeight: 23,
+    flex: 2,
+    height: 40,
+    borderRadius: 25 
+}
 });
