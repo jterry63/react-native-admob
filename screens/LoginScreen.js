@@ -141,7 +141,7 @@ export default class LoginScreen extends React.Component {
     const inputAccessoryViewID = "uniqueID";
     return (
     
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
         
         <FadeInView>
           <Text style={styles.logo}>
@@ -179,7 +179,7 @@ export default class LoginScreen extends React.Component {
 {/* custom button for keyboard dismissal ---------------------------- */}
         <InputAccessoryView nativeID={inputAccessoryViewID}>
           <TouchableOpacity 
-            style={{backgroundColor: '#23accd', height: 25, justifyContent: 'center'}}
+            style={{backgroundColor: 'transparent', height: 25, justifyContent: 'center'}}
             onPress={Keyboard.dismiss}
             >
             <Text style={{ textAlign: 'center'}}>

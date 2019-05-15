@@ -158,7 +158,7 @@ export default class SignUpScreen extends React.Component {
   render() {
     const inputAccessoryViewID = "uniqueID";
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
         <View>
           <Text style={styles.logo}>
             Charity{"\n"}Ads
@@ -239,6 +239,7 @@ export default class SignUpScreen extends React.Component {
               editable={this.state.inputEditable}
               ref={ref => this.emailRef = ref} 
               returnKeyType={"next"}
+              keyboardType={"email-address"}
               blurOnSubmit={false}
               onSubmitEditing={() => this.passwordRef.focus()}
               inputAccessoryViewID={inputAccessoryViewID}
@@ -294,7 +295,7 @@ export default class SignUpScreen extends React.Component {
 {/* custom button for keyboard dismissal ---------------------------- */}
         <InputAccessoryView nativeID={inputAccessoryViewID}>
           <TouchableOpacity 
-            style={{backgroundColor: '#23accd', height: 25, justifyContent: 'center'}}
+            style={{backgroundColor: 'transparent', height: 25, justifyContent: 'center'}}
             onPress={Keyboard.dismiss}
             >
             <Text style={{ textAlign: 'center'}}>

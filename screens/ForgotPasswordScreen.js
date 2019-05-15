@@ -61,7 +61,7 @@ export default class ForgotPasswordScreen extends React.Component {
     const inputAccessoryViewID = "uniqueID";
     return (
    
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
     <View>
           <Text style={styles.logo}>
             Charity{"\n"}Ads
@@ -117,7 +117,7 @@ export default class ForgotPasswordScreen extends React.Component {
 {/* custom button for keyboard dismissal ---------------------------- */}
         <InputAccessoryView nativeID={inputAccessoryViewID}>
           <TouchableOpacity 
-            style={{backgroundColor: '#23accd', height: 25, justifyContent: 'center'}}
+            style={{backgroundColor: 'transparent', height: 25, justifyContent: 'center'}}
             onPress={Keyboard.dismiss}
             >
             <Text style={{ textAlign: 'center'}}>
