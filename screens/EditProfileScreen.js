@@ -10,8 +10,10 @@ import {
   TouchableOpacity,
   TextInput,
   Button,
+  ScrollView,
 
 } from "react-native";
+import { ImagePicker, Permissions, Constants } from 'expo';
 import firebase from "firebase";
 
 export default class EditProfileScreen extends React.Component {
@@ -32,19 +34,84 @@ export default class EditProfileScreen extends React.Component {
         editEmail: null,
         editURL: null,
         modalVisible: false,
-        url: this.user.photoURL
+        url: this.user.photoURL,
+        image: null,
+        result: null
     }
   }
 
+  askPermissionsAsync = async () => {
+    await Permissions.askAsync(Permissions.CAMERA);
+    await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    // you would probably do something to verify that permissions
+    // are actually granted, but I'm skipping that for brevity
+  };
+
+  useLibraryHandler = async () => {
+    await this.askPermissionsAsync();
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      base64: false,
+    });
+    this.setState({ result });
+    console.log(this.state.result);
+    this.setState({ editURL: result.uri})
+    this.updateProfileImage();
+    
+
+  };
+
+  updateProfileImage() {
+
+    var user = firebase.auth().currentUser;
+        user
+      .updateProfile({
+        photoURL: this.state.editURL
+      
+      })
+      .then(function() {
+        console.log(user);
+      })
+      .catch(function(error) {
+        console.log(error)
+      });  
+      
+      Alert.alert(
+        'Success!',
+        'Your profile image has been updated',
+        [
+          {text: 'OK', onPress: () => this.props.navigation.navigate("Profile")},
+        ],
+        {cancelable: false},
+      );
+
+
+  }
+
+  useCameraHandler = async () => {
+    await this.askPermissionsAsync();
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      base64: false,
+    });
+    this.setState({ result });
+    console.log(this.state.result);
+  };
+
+
+  
+
   onSaveClick() {
 
-    if (this.state.editEmail && this.state.editName && this.state.editURL) {
+    if (this.state.editEmail && this.state.editName) {
         var user = firebase.auth().currentUser;
         user
       .updateProfile({
         displayName: this.state.editName,
         email: this.state.editEmail,
-        photoURL: this.state.editURL
+      
       })
       .then(function() {
         console.log(user);
@@ -82,11 +149,41 @@ export default class EditProfileScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+
+    //   <ScrollView style={{flex: 1, marginTop: 40}}>
+    //   <Button title="launchCameraAsync" onPress={this.useCameraHandler} />
+    //   <Button
+    //     title="launchImageLibraryAsync"
+    //     onPress={this.useLibraryHandler}
+    //   />
+    //   <Text style={styles.paragraph}>
+    //     {JSON.stringify(this.state.result)}
+    //   </Text>
+    // </ScrollView>
+
+
+
+
+
+
+
+
+
+    <View style={styles.container}>
           <View style={styles.header}></View>
           <Image style={styles.avatar} source={{uri: this.state.url}}/>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
+
+            <TouchableOpacity
+                onPress={() => {
+                  this.useLibraryHandler();
+                  }}
+                style={styles.buttonContainer}>
+                <Text style={{color: 'white'}}>Change Profile Picture</Text> 
+              </TouchableOpacity>
+
+              
                 <View style={styles.containerStyle}>
                 <TextInput
                     style={styles.inputStyle}
@@ -106,20 +203,9 @@ export default class EditProfileScreen extends React.Component {
                     placeholderTextColor="silver"
                 />
               </View>
-              <View style={styles.containerStyle}>
-                <TextInput
-                    style={styles.inputStyle}
-                    autoCapitalize="none"
-                    onChangeText={(editURL) => this.setState({editURL})}
-                    value={this.state.editURL}
-                    placeholder="Profile Image URL"
-                    placeholderTextColor="silver"
-                />
-
+         
               
-              </View>
-              
-             
+      
               
                     
               <TouchableOpacity
@@ -183,7 +269,10 @@ export default class EditProfileScreen extends React.Component {
 
     );
   }
+
 }
+
+
 
 const styles = StyleSheet.create({
   header:{
@@ -293,3 +382,5 @@ const styles = StyleSheet.create({
         marginBottom: 50
       }
 })
+
+

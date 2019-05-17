@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, StyleSheet, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
+import { StyleSheet, View, ActivityIndicator, TouchableOpacity } from "react-native";
 import { AdMobBanner, AdMobInterstitial, AdMobRewarded} from "expo";
 import { EvilIcons } from '@expo/vector-icons';
 import firebase from 'firebase';
+import { Container, Header, Item, Input, Icon, Button, Text } from 'native-base';
 
 
 
@@ -20,10 +21,12 @@ export default class AdScreen extends React.Component {
   constructor() {
     super()
     this.user = firebase.auth().currentUser
-    this.database = firebase.database().ref("/views/" + this.user.uid).child("views")
+    this.viewDatabase = firebase.database().ref("/views/" + this.user.uid).child("views")
+    this.globalDatabase = firebase.database().ref("/views/globalViews").child("views")
 
   this.state = {
     counter: 0,
+    globalViews: 0,
     loading: false
   };
 }
@@ -64,10 +67,15 @@ export default class AdScreen extends React.Component {
 
 componentDidMount() {
 
-  this.database.on('value', snap => {
+  this.viewDatabase.on('value', snap => {
     this.setState({ counter: snap.val()})
   })
 
+  this.globalDatabase.on('value', snap => {
+    this.setState({ globalViews: snap.val()})
+  })
+
+  
 
     AdMobRewarded.setTestDeviceID("EMULATOR");
     // ALWAYS USE TEST ID for Admob ads
@@ -109,16 +117,22 @@ componentDidMount() {
   }
 
   rewardUser () {
-    this.setState({ counter: this.state.counter + 1})
+    this.setState({ counter: this.state.counter + 1, globalViews: this.state.globalViews + 1})
     console.log("Rewarded");
     console.log("view count: " + this.state.counter)
-    let user = firebase.auth().currentUser;
-    let uid = user.uid;
+
     firebase
       .database()
-      .ref("views/" + uid)
+      .ref("views/" + this.user.uid)
       .set({
         views: this.state.counter
+      });
+
+      firebase
+      .database()
+      .ref("views/globalViews")
+      .set({
+        views: this.state.globalViews
       });
    
       
@@ -128,33 +142,26 @@ componentDidMount() {
   
   render() {
     return (
+      // <View style={styles.container}>
+      //   {this.renderButton()}
+
+      // </View>
+
+      <Container>
+      <Header searchBar rounded>
+        <Item>
+          <Icon name="ios-search" />
+          <Input placeholder="Search" />
+          
+        </Item>
+        <Button transparent>
+          <Text>Search</Text>
+        </Button>
+      </Header>
       <View style={styles.container}>
-        {this.renderButton()}
-        {/* <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID="ca-app-pub-3940256099942544/6300978111"
-          testDeviceID="EMULATOR"
-          didFailToReceiveAdWithError={this.bannerError}
-        /> */}
-
-
-    {/* <TouchableOpacity
-      onPress={this.showRewarded.bind(this)}
-      style={{
-       borderWidth:1,
-       borderColor:'rgba(0,0,0,0.2)',
-       alignItems:'center',
-       justifyContent:'center',
-       width:100,
-       height:100,
-       backgroundColor:'#fff',
-       borderRadius:50,
-     }}
-    >
-      <Text style={{textAlign: 'center', color: '#929394'}}><EvilIcons name="play" size={45} color="#929394" />{"\n"}Watch Ad</Text>
-    </TouchableOpacity> */}
+      {this.renderButton()}
       </View>
+    </Container>
     );
   }
 }

@@ -1,12 +1,6 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  Alert,
-  TouchableHighlight
-} from "react-native";
+import { Image, Dimensions } from "react-native"
+import { Container, Header, Content, Card, CardItem, Text, Body } from "native-base";
 
 export default class AdScreen extends React.Component {
   static navigationOptions = {
@@ -22,85 +16,89 @@ export default class AdScreen extends React.Component {
   }
 
   render() {
+    const {height: screenHeight} = Dimensions.get('window');
     return (
  
-
-      <View style={styles.container}>
-        <View style={styles.modalContainer}>
-          <View style={{marginTop: 30}}>
-            <Text style={styles.modalText}>Welcome to Charity Ads!</Text>
-            <View style={styles.instructions}>
-              <Text style={{ fontSize: 30, color: "white" }}>1. do this</Text>
-              <Text style={{ fontSize: 30, color: "white" }}>
-                2. then do this
+      <Container>
+     
+      <Content padder style={{flex: 1, height: screenHeight, justifyContent: 'center'}}>
+        <Card>
+          <CardItem header bordered>
+            <Text>How to get started with Charity Ads</Text>
+          </CardItem>
+          <CardItem bordered>
+            <Body>
+              <Text>
+             1. Do this
               </Text>
-              <Text style={{ fontSize: 30, color: "white" }}>
-                3. now do this
+            </Body>
+          </CardItem>
+          <CardItem bordered>
+            <Body>
+              <Text>
+             2. Now do this
               </Text>
-            </View>
-
-           
-          </View>
-        </View>
-
-        <TouchableHighlight
-        style={{display: 'none'}}
-          onPress={() => {
-            this.setModalVisible(true);
-          }}
-        >
-          <Text>Show Modal</Text>
-        </TouchableHighlight>
-      </View>
+            </Body>
+          </CardItem>
+          <CardItem bordered>
+            <Body>
+              <Text>
+             3. And then do this 
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Content>
+    </Container>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  modalContainer: {
-    backgroundColor: "#23accd",
-    height: "100%"
-  },
+// const styles = StyleSheet.create({
+//   modalContainer: {
+//     backgroundColor: "#23accd",
+//     height: "100%"
+//   },
 
-  modalText: {
-    color: "white",
-    paddingTop: 10,
-    textAlign: "center",
-    fontSize: 30,
-    fontFamily: "adlery"
-  },
+//   modalText: {
+//     color: "white",
+//     paddingTop: 10,
+//     textAlign: "center",
+//     fontSize: 30,
+//     fontFamily: "adlery"
+//   },
 
-  getStartedBtn: {
-    color: "#f5f5f5",
-    textAlign: "center",
-    marginTop: "25%",
-    fontWeight: "bold",
-    fontSize: 20,
-    textDecorationLine: "underline"
-  },
-  instructions: {
-    marginTop: "25%"
-  },
-
-
-  container: {
-    flex: 1,
-    backgroundColor: '#23accd',
-    justifyContent: "center"
-    },
-  errorTextStyle: {
-    fontSize: 20,
-    alignSelf: "center",
-    color: "white"
-  },
-  logo: {
-    fontFamily: 'adlery',
-    color: 'white',
-    fontSize: 80,
-    textAlign: 'center',
-    paddingTop: 10,
-
-  }
+//   getStartedBtn: {
+//     color: "#f5f5f5",
+//     textAlign: "center",
+//     marginTop: "25%",
+//     fontWeight: "bold",
+//     fontSize: 20,
+//     textDecorationLine: "underline"
+//   },
+//   instructions: {
+//     marginTop: "25%"
+//   },
 
 
-});
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#23accd',
+//     justifyContent: "center"
+//     },
+//   errorTextStyle: {
+//     fontSize: 20,
+//     alignSelf: "center",
+//     color: "white"
+//   },
+//   logo: {
+//     fontFamily: 'adlery',
+//     color: 'white',
+//     fontSize: 80,
+//     textAlign: 'center',
+//     paddingTop: 10,
+
+//   }
+
+
+// });

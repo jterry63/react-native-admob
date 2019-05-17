@@ -2,14 +2,16 @@ import React from "react";
 import {
   Image,
   StyleSheet,
-  Text,
   View,
   Modal,
   Alert,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from "react-native";
 import { Spinner } from "../components/common"
 import firebase from "firebase";
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right, Accordion } from 'native-base';
+
 
 
 export default class HomeScreen extends React.Component {
@@ -21,19 +23,26 @@ export default class HomeScreen extends React.Component {
     super()
     this.user = firebase.auth().currentUser
     this.database = firebase.database().ref("/views/" + this.user.uid).child("views")
+    this.globalDB = firebase.database().ref("/views/globalViews").child("views")
 
   this.state = {
     loading: false,
     userName: "",
     userEmail: "",
     viewCount: 0,
+    globalViewCount: 0
   }
 }
 
   componentDidMount() {
     this.database.on('value', snap => {
       this.setState({ viewCount: snap.val()})
-      console.log("views: " + this.state.viewCount)
+      console.log("(home page) views: " + this.state.viewCount)
+    })
+
+    this.globalDB.on('value', snap => {
+      this.setState({ globalViewCount: snap.val()})
+      console.log("(home page) global views: " + this.state.globalViewCount)
     })
 
     this.setState({ 
@@ -52,6 +61,12 @@ export default class HomeScreen extends React.Component {
       <View>
         <Text style={styles.textColor}>Views:</Text>
         <Text style={styles.views}>{this.state.viewCount}</Text>
+
+        <View>
+        <Text style={styles.textColor}>Global Views:</Text>
+        <Text style={styles.views}>{this.state.globalViewCount}</Text>
+        </View>
+
         </View>
     );
   }
@@ -67,24 +82,83 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
+    const {height: screenHeight} = Dimensions.get('window');
+
     return (
-      <View style={styles.container}>
-        <View style={styles.firstrow}>
+ <Container style={{marginTop: 20}}>
+         <Text style={styles.header}>
+      Charity Ads
+      </Text>
+        <Content style={{flex: 1, height: screenHeight, justifyContent: 'center'}}>
+
+    
+
+
+
+
+          <Card>
+            <CardItem>
+              <Left>
+                <Thumbnail source={{uri: 'https://www.seekpng.com/png/small/31-310445_globe-clipart-png-public-domain-globe-clipart.png'}} />
+                <Body>
+                  <Text>Total Ads Watched for Charity:</Text>
+               
+                </Body>
+              </Left>
+            </CardItem>
+            <CardItem cardBody style={{justifyContent: "center", alignItems: "center"}}>
+              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 30}}>
+              {this.state.globalViewCount}
+              </Text>
+        
+            </CardItem>
        
-        </View>
+      
+          </Card>
 
 
-        <View style={styles.secondrow}>
-          {this.renderButton()}
-        </View>
 
-        <View style={styles.fourthrow} />
 
-          <TouchableHighlight>
-            <Text style={{ display: "none" }}>Show Modal</Text>
-          </TouchableHighlight>
-       
-      </View>
+          <Card>
+            <CardItem>
+              <Left>
+                <Thumbnail source={{uri: this.user.photoURL}} />
+                <Body>
+                  <Text>Your Daily Views:</Text>
+               
+                </Body>
+              </Left>
+            </CardItem>
+            <CardItem cardBody style={{justifyContent: "center", alignItems: "center"}}>
+              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 30}}>
+              {this.state.viewCount}
+              </Text>
+            </CardItem>
+      
+          </Card>
+
+          <Card>
+            <CardItem>
+              <Left>
+                <Thumbnail source={{uri: "http://static1.squarespace.com/static/5bf71e47372b9640778bbc5e/5c58a0e5085229157dfe8508/5c592285e79c70b18f395e71/1551739385999/tickets-transparent.png"}} />
+                <Body>
+                  <Text>Views Remaining For Next Ticket Entry:</Text>
+               
+                </Body>
+              </Left>
+            </CardItem>
+            <CardItem cardBody style={{justifyContent: "center", alignItems: "center"}}>
+              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 30}}>
+              3
+              </Text>
+            </CardItem>
+      
+          </Card>
+
+
+
+        </Content>
+      </Container>
     );
   }
 }
@@ -99,8 +173,7 @@ const styles = StyleSheet.create({
   firstrow: {
     flex: 1,
     backgroundColor: "white",
-    marginTop: 20,
-    justifyContent: "center",
+    marginTop: 30,
     alignItems: "center"
   },
   secondrow: {
@@ -183,8 +256,11 @@ const styles = StyleSheet.create({
     marginTop: "25%"
   },
   header: {
-    backgroundColor: "white",
-    marginTop: 30
+    backgroundColor: "white", 
+    fontFamily: 'adlery',
+    padding: 10,
+    fontSize: 30,
+    textAlign: "center"
   },
   headerContent: {
     alignItems: "center"
