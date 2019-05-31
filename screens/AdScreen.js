@@ -3,7 +3,7 @@ import { StyleSheet, View, ActivityIndicator, TouchableOpacity } from "react-nat
 import { AdMobBanner, AdMobInterstitial, AdMobRewarded} from "expo";
 import { EvilIcons } from '@expo/vector-icons';
 import firebase from 'firebase';
-import { Container, Header, Item, Input, Icon, Button, Text } from 'native-base';
+import { Container, Header, Text } from 'native-base';
 
 
 
@@ -11,6 +11,8 @@ import { Container, Header, Item, Input, Icon, Button, Text } from 'native-base'
     await AdMobRewarded.requestAdAsync();
     await AdMobRewarded.showAdAsync();
   };
+
+
 
 export default class AdScreen extends React.Component {
 
@@ -23,11 +25,16 @@ export default class AdScreen extends React.Component {
     this.user = firebase.auth().currentUser
     this.viewDatabase = firebase.database().ref("/views/" + this.user.uid).child("views")
     this.globalDatabase = firebase.database().ref("/views/globalViews").child("views")
+    this.ticketCountdownDatabase = firebase.database().ref("tickets/" + this.user.uid).child("ticketViewCountdown")
+    this.ticketEntriesDatabase2 = firebase.database().ref("entries/" + this.user.uid).child("ticketEntries")
 
   this.state = {
     counter: 0,
     globalViews: 0,
-    loading: false
+    ticketViewCountdown: 3,
+    numTicketEntries: 0,
+    loading: false,
+    hasTickets: false
   };
 }
 
@@ -66,7 +73,8 @@ export default class AdScreen extends React.Component {
   }
 
 componentDidMount() {
-
+  
+   
   this.viewDatabase.on('value', snap => {
     this.setState({ counter: snap.val()})
   })
@@ -75,7 +83,17 @@ componentDidMount() {
     this.setState({ globalViews: snap.val()})
   })
 
-  
+  this.ticketCountdownDatabase.on('value', snap => {
+    this.setState({ ticketViewCountdown: snap.val()})
+    if (snap.val() === 0) {
+      this.ticketController();
+    }
+  })
+
+  this.ticketEntriesDatabase2.on('value', snap => {
+    this.setState({ numTicketEntries: snap.val()})
+    console.log("number of ticket entries: " + snap.val())
+  })
 
     AdMobRewarded.setTestDeviceID("EMULATOR");
     // ALWAYS USE TEST ID for Admob ads
@@ -130,15 +148,112 @@ componentDidMount() {
 
       firebase
       .database()
+      .ref("tickets/" + this.user.uid)
+      .set({
+        ticketViewCountdown: this.state.ticketViewCountdown - 1
+      });
+
+
+      firebase
+      .database()
       .ref("views/globalViews")
       .set({
         views: this.state.globalViews
       });
-   
-      
   }
 
+  ticketController() {
+  
+    switch (this.state.numTicketEntries) {
+      case 0:
 
+        firebase
+        .database()
+        .ref("entries/" + this.user.uid)
+        .set({
+          ticketEntries: 1
+        });
+    
+        firebase
+        .database()
+        .ref("tickets/" + this.user.uid)
+        .set({
+          ticketViewCountdown: 5
+        });
+
+        break;
+
+      case 1:
+    
+        firebase
+        .database()
+        .ref("entries/" + this.user.uid)
+        .set({
+          ticketEntries: 2
+        });
+    
+        firebase
+        .database()
+        .ref("tickets/" + this.user.uid)
+        .set({
+          ticketViewCountdown: 10
+        });
+
+        break;
+
+        case 2:
+    
+          firebase
+          .database()
+          .ref("entries/" + this.user.uid)
+          .set({
+            ticketEntries: 3
+          });
+      
+          firebase
+          .database()
+          .ref("tickets/" + this.user.uid)
+          .set({
+            ticketViewCountdown: 15
+          });
+
+          break;
+
+          case 3:
+    
+            firebase
+            .database()
+            .ref("entries/" + this.user.uid)
+            .set({
+              ticketEntries: 4
+            });
+        
+            firebase
+            .database()
+            .ref("tickets/" + this.user.uid)
+            .set({
+              ticketViewCountdown: 20
+            });
+
+            break;
+
+      default:
+        firebase
+        .database()
+        .ref("entries/" + this.user.uid)
+        .set({
+          ticketEntries: this.state.numTicketEntries + 1
+        });
+    
+        firebase
+        .database()
+        .ref("tickets/" + this.user.uid)
+        .set({
+          ticketViewCountdown: 20
+        });
+    }
+    
+  }
   
   render() {
     return (
@@ -148,7 +263,7 @@ componentDidMount() {
       // </View>
 
       <Container>
-      <Header searchBar rounded>
+      {/* <Header searchBar rounded>
         <Item>
           <Icon name="ios-search" />
           <Input placeholder="Search" />
@@ -157,7 +272,7 @@ componentDidMount() {
         <Button transparent>
           <Text>Search</Text>
         </Button>
-      </Header>
+      </Header> */}
       <View style={styles.container}>
       {this.renderButton()}
       </View>

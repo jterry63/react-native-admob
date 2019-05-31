@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import { Spinner } from "../components/common"
 import firebase from "firebase";
-import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right, Accordion } from 'native-base';
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right, Accordion, Item } from 'native-base';
+import { ScrollView } from "react-native-gesture-handler";
 
 
 
@@ -24,17 +25,25 @@ export default class HomeScreen extends React.Component {
     this.user = firebase.auth().currentUser
     this.database = firebase.database().ref("/views/" + this.user.uid).child("views")
     this.globalDB = firebase.database().ref("/views/globalViews").child("views")
+    this.ticketCountdownDatabase = firebase.database().ref("tickets/" + this.user.uid).child("ticketViewCountdown")
+    this.ticketEntriesDatabase = firebase.database().ref("entries/" + this.user.uid).child("ticketEntries")
+    this.drawingTimeDatabase = firebase.database().ref("drawing_time").child("date")
 
   this.state = {
     loading: false,
     userName: "",
     userEmail: "",
     viewCount: 0,
-    globalViewCount: 0
+    globalViewCount: 0,
+    ticketViewCountdown: 3,
+    ticketEntries: 0,
+    drawingTime: ""
   }
 }
 
   componentDidMount() {
+
+
     this.database.on('value', snap => {
       this.setState({ viewCount: snap.val()})
       console.log("(home page) views: " + this.state.viewCount)
@@ -43,6 +52,18 @@ export default class HomeScreen extends React.Component {
     this.globalDB.on('value', snap => {
       this.setState({ globalViewCount: snap.val()})
       console.log("(home page) global views: " + this.state.globalViewCount)
+    })
+
+    this.ticketCountdownDatabase.on('value', snap => {
+      this.setState({ ticketViewCountdown: snap.val()})
+    })
+
+    this.ticketEntriesDatabase.on('value', snap => {
+      this.setState({ ticketEntries: snap.val()})
+    })
+
+    this.drawingTimeDatabase.on('value', snap => {
+      this.setState({ drawingTime: snap.val()})
     })
 
     this.setState({ 
@@ -65,6 +86,7 @@ export default class HomeScreen extends React.Component {
         <View>
         <Text style={styles.textColor}>Global Views:</Text>
         <Text style={styles.views}>{this.state.globalViewCount}</Text>
+        
         </View>
 
         </View>
@@ -81,15 +103,28 @@ export default class HomeScreen extends React.Component {
     this.props.navigation.navigate("Login")
   };
 
+
   render() {
     const {height: screenHeight} = Dimensions.get('window');
+    const dataArray = [
+      { title: "What are the positive impacts of these views?", content: "The " + this.state.globalViewCount + " views that CharityAds users have watched are helping to combat food and water insufficiencies throughout the world. We have been able to build X amount of water wells for those without clean, safe water and provide X amount of meals to the hungry" },
+    ];
+    const dataArray2 = [
+      { title: "Why are your views important?", content: "Every ad view is valuable to those in need. For example, one simple ad view can provide 8 days of clean water to an individual. 10 ad views is enough to provide a meal to someone without food. You are able to have a significant impact by giving of your time to watch ads." }
+    ];
 
     return (
- <Container style={{marginTop: 20}}>
-         <Text style={styles.header}>
+ <Container>
+         <Header style={{backgroundColor: 'white'}}>
+           
+           <Text style={styles.header}>
       Charity Ads
       </Text>
-        <Content style={{flex: 1, height: screenHeight, justifyContent: 'center'}}>
+          
+         </Header>
+
+      <ScrollView>
+        <Content style={{flex: 1, height: screenHeight, justifyContent: 'flex-start'}}>
 
     
 
@@ -107,11 +142,12 @@ export default class HomeScreen extends React.Component {
               </Left>
             </CardItem>
             <CardItem cardBody style={{justifyContent: "center", alignItems: "center"}}>
-              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 30}}>
+              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 20, fontWeight: "bold"}}>
               {this.state.globalViewCount}
               </Text>
         
             </CardItem>
+            <Accordion headerStyle={{ backgroundColor: "whitesmoke" }} contentStyle={{ backgroundColor: "white" }} dataArray={dataArray} expanded={1}/>
        
       
           </Card>
@@ -124,16 +160,18 @@ export default class HomeScreen extends React.Component {
               <Left>
                 <Thumbnail source={{uri: this.user.photoURL}} />
                 <Body>
-                  <Text>Your Daily Views:</Text>
+                  <Text>Your Total Ads Watched for Charity:</Text>
                
                 </Body>
               </Left>
             </CardItem>
             <CardItem cardBody style={{justifyContent: "center", alignItems: "center"}}>
-              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 30}}>
+              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 20, fontWeight: "bold"}}>
               {this.state.viewCount}
               </Text>
             </CardItem>
+
+            <Accordion headerStyle={{ backgroundColor: "whitesmoke" }} contentStyle={{ backgroundColor: "white" }} dataArray={dataArray2} expanded={1}/>
       
           </Card>
 
@@ -148,9 +186,23 @@ export default class HomeScreen extends React.Component {
               </Left>
             </CardItem>
             <CardItem cardBody style={{justifyContent: "center", alignItems: "center"}}>
-              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 30}}>
-              3
+              <Text style={{textAlign: "center", marginBottom: 15, fontSize: 20, fontWeight: "bold"}}>
+              {this.state.ticketViewCountdown}
               </Text>
+            </CardItem>
+
+            <CardItem cardBody style={{justifyContent: "center", alignItems: "center", marginBottom: 5}}>
+            <Text style={{textAlign: "center"}}>
+              Current number of entries for this drawing: {this.state.ticketEntries}
+            </Text>
+         
+            </CardItem>
+
+            <CardItem footer bordered cardBody style={{justifyContent: "center", alignItems: "center"}}>
+            <Text style={{textAlign: "center"}}>
+              Our next ticket drawing will occur on:{"\n"}{this.state.drawingTime}{"\n"}
+            </Text>
+         
             </CardItem>
       
           </Card>
@@ -158,6 +210,10 @@ export default class HomeScreen extends React.Component {
 
 
         </Content>
+
+        </ScrollView>
+
+
       </Container>
     );
   }
@@ -258,9 +314,11 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "white", 
     fontFamily: 'adlery',
-    padding: 10,
-    fontSize: 30,
-    textAlign: "center"
+    padding: 5,
+    fontSize: 25,
+    textAlign: "center",
+    marginTop: 5
+   
   },
   headerContent: {
     alignItems: "center"

@@ -11,9 +11,17 @@ import firebase from "firebase";
 import TutorialCarousel from "../components/common/TutorialCarousel";
 
 export default class NewUserScreen extends React.Component {
-  state = {
+  constructor() {
+    super()
+
+    this.user = firebase.auth().currentUser
+  
+
+  this.state = {
     modalVisible: true
-  };
+  } 
+
+}
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
@@ -29,6 +37,31 @@ export default class NewUserScreen extends React.Component {
       .then(function() {
         console.log(user);
       })
+  }
+
+  componentDidMount() {
+    firebase
+    .database()
+    .ref("views/" + this.user.uid)
+    .set({
+      views: 0,
+    });
+    
+    firebase
+    .database()
+    .ref("tickets/" + this.user.uid)
+    .set({
+      ticketViewCountdown: 3
+    });
+
+    firebase
+    .database()
+    .ref("entries/" + this.user.uid)
+    .set({
+      ticketEntries: 0
+    });
+    
+
   }
 
   render() {
