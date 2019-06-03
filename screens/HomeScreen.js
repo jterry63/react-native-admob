@@ -107,7 +107,7 @@ export default class HomeScreen extends React.Component {
   render() {
     const {height: screenHeight} = Dimensions.get('window');
     const dataArray = [
-      { title: "What are the positive impacts of these views?", content: "The " + this.state.globalViewCount + " views that CharityAds users have watched are helping to combat food and water insufficiencies throughout the world. We have been able to build X amount of water wells for those without clean, safe water and provide X amount of meals to the hungry" },
+      { title: "What are the positive impacts of these views?", content: "The " + this.state.globalViewCount + " views that CharityAds users have watched are helping to combat food and water insufficiencies throughout the world. We have been able to build water wells for those without clean, safe water and provide meals to the hungry" },
     ];
     const dataArray2 = [
       { title: "Why are your views important?", content: "Every ad view is valuable to those in need. For example, one simple ad view can provide 8 days of clean water to an individual. 10 ad views is enough to provide a meal to someone without food. You are able to have a significant impact by giving of your time to watch ads." }

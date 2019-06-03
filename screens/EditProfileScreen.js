@@ -184,7 +184,7 @@ export default class EditProfileScreen extends React.Component {
               </TouchableOpacity>
 
               
-                <View style={styles.containerStyle}>
+                {/* <View style={styles.containerStyle}>
                 <TextInput
                     style={styles.inputStyle}
                     onChangeText={(editName) => this.setState({editName})}
@@ -202,19 +202,19 @@ export default class EditProfileScreen extends React.Component {
                     placeholder="Email Address"
                     placeholderTextColor="silver"
                 />
-              </View>
+              </View> */}
          
               
       
               
                     
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => {
                     this.onSaveClick();
                   }}
                 style={styles.buttonContainer}>
                 <Text style={{color: 'white'}}>Save</Text> 
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               <TouchableOpacity
                 onPress={() => {
