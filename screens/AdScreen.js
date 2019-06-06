@@ -97,7 +97,7 @@ componentDidMount() {
 
     AdMobRewarded.setTestDeviceID("EMULATOR");
     // ALWAYS USE TEST ID for Admob ads
-    AdMobRewarded.setAdUnitID("ca-app-pub-3940256099942544/1712485313");
+    AdMobRewarded.setAdUnitID("ca-app-pub-9535033531422052/9792377421");
   
     AdMobRewarded.addEventListener("rewardedVideoDidLoad", () =>
       console.log("Loaded")

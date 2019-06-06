@@ -65,6 +65,9 @@ export default class AdScreen extends React.Component {
                 <Text style={styles.timelineTextHeader}>
                   From the play tab, click 'Watch Ad' and view the ad all the way through. Repeat as many times as you'd like. 
                 </Text>
+                <Text numberOfLines={2} style={styles.timelineTextComment}>
+                  Proceeds from ad views will automatically be given to charities that fight hunger and lack of clean water.
+                </Text>
               </View>
             </View>
           </View>
@@ -96,7 +99,7 @@ export default class AdScreen extends React.Component {
                 <Text style={styles.timelineTextHeader}>
                   From the home page you will see your updated number of total views, as well as the number of entries that you have for the next drawing.
                 </Text>
-                <Text numberOfLines={2} style={styles.timelineTextComment}>
+                <Text numberOfLines={3} style={styles.timelineTextComment}>
                   'Views remaining for next ticket entry' and 'Current number of entries' will reset after every prize drawing.
                 </Text>
               </View>
