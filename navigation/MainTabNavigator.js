@@ -14,6 +14,7 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
+import WheelScreen from "../screens/WheelScreen";
 
 
 const LoginStack = createStackNavigator({
@@ -89,11 +90,20 @@ const AdStack = createStackNavigator({
 });
 
 AdStack.navigationOptions = {
-  tabBarLabel: "Watch Ads",
+  tabBarVisible: false
+};
+
+
+const WheelStack = createStackNavigator({
+  Wheel: WheelScreen
+});
+
+WheelStack.navigationOptions = {
+  tabBarLabel: "Wheel",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-play" : "md-play"}
+      name={Platform.OS === "ios" ? "ios-sync" : "md-sync"}
     />
   )
 };
@@ -133,7 +143,8 @@ InfoStack.navigationOptions = {
 
 export default createBottomTabNavigator(
   {
-  Ads: AdStack,
+ 
+  Wheel: WheelStack,
   Home: HomeStack,
   Info: InfoStack,
   Profile: ProfileStack,
